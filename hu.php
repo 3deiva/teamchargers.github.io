@@ -238,7 +238,12 @@ $password = '5112';
 
 // Establishing the database connection using PDO
 try {
-    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
+   $pdo = new PDO(
+    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+    "ev_8jta_user",
+    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+);
+
     // Set PDO to throw exceptions on errors
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
