@@ -77,7 +77,12 @@
             $db_password = '5112';
 
             try {
-                $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $db_password);
+                $pdo = new PDO(
+    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+    "ev_8jta_user",
+    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+);
+
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 $sql = "SELECT userid, user_name, password, usertype FROM reg WHERE mobile_no = ?";
@@ -134,3 +139,4 @@
     </div>
 </body>
 </html>
+
