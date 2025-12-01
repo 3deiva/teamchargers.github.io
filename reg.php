@@ -137,7 +137,12 @@
                     $user = "postgres";
                     $db_password = '5112';
 
-                    $pdo = new PDO("pgsql:host=$host;port=5432;dbname=$db", $user, $db_password);
+                    $pdo = new PDO(
+    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+    "ev_8jta_user",
+    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+);
+
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                     // Insert user data into the 'users' table
@@ -212,3 +217,4 @@
     </script>
 </body>
 </html>
+
