@@ -1,3 +1,52 @@
+<?php
+session_start();
+
+$error_message = "";
+$success_message = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $phone_number = $_POST["phone_number"];
+    $password = $_POST["password"];
+    $userType = $_POST["userType"];
+
+    try {
+        $pdo = new PDO(
+            "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+            "ev_8jta_user",
+            "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+        );
+
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $sql = "SELECT userid, user_name, password, usertype FROM reg WHERE mobile_no = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$phone_number]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row && $password == $row['password'] && $userType == $row['usertype']) {
+
+            $_SESSION['user_type'] = $row['usertype'];
+            $_SESSION['username'] = $row['user_name'];
+            $_SESSION['contact'] = $phone_number;
+
+            // Redirect before output
+            if ($userType == 'user') {
+                header("Location: hu.php");
+            } else {
+                header("Location: operator.php");
+            }
+            exit();
+
+        } else {
+            $error_message = "Invalid phone number, password, or user type.";
+        }
+    } catch (PDOException $e) {
+        $error_message = "Error: " . $e->getMessage();
+    }
+
+    $pdo = null;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +55,6 @@
     <title>EV-Login</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        /* Custom background image and general styles */
         body {
             font-family: Arial, sans-serif;
             background: url('img/log1.jpg') no-repeat center center fixed;
@@ -28,33 +76,19 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        .fade-in {
-            animation: fadeIn 2s ease-in-out;
-        }
+        .fade-in { animation: fadeIn 2s ease-in-out; }
 
         .slide-up {
             animation: slideUp 0.5s ease-in-out;
         }
 
         @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -62,58 +96,17 @@
     <div class="login-container p-6 bg-white bg-opacity-90 rounded-lg shadow-lg max-w-md w-full">
         <h2 class="text-2xl font-bold text-green-600 text-center mb-6 fade-in">EV COMPANION</h2>
 
-        <?php
-        session_start();
+        <!-- Error Message -->
+        <?php if (!empty($error_message)): ?>
+            <p class="text-red-600 text-center mb-4 slide-up"><?= $error_message ?></p>
+        <?php endif; ?>
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $phone_number = $_POST["phone_number"];
-            $password = $_POST["password"];
-            $userType = $_POST["userType"];
+        <!-- Success Message (NOT used now because redirect happens immediately) -->
+        <?php if (!empty($success_message)): ?>
+            <p class="text-green-600 text-center mb-4 slide-up"><?= $success_message ?></p>
+        <?php endif; ?>
 
-            $host = "localhost";
-            $db = "ev";
-            $port='5432';
-            $user = "postgres";
-            $db_password = '5112';
-
-            try {
-                $pdo = new PDO(
-    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
-    "ev_8jta_user",
-    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
-);
-
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                $sql = "SELECT userid, user_name, password, usertype FROM reg WHERE mobile_no = ?";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$phone_number]);
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($row && $password == $row['password'] && $userType == $row['usertype']) {
-                    $_SESSION['user_type'] = $row['usertype'];
-                    $_SESSION['username'] = $row['user_name'];
-                    $_SESSION['contact'] = $phone_number;
-
-                    echo '<p class="text-green-600 text-center mb-4 slide-up">Login successful. Redirecting...</p>';
-                    if ($userType == 'user') {
-                        header("Refresh: 2; URL=hu.php");
-                    } else {
-                        header("Refresh: 2; URL=operator.php");
-                    }
-                    exit();
-                } else {
-                    echo '<p class="text-red-600 text-center mb-4 slide-up">Invalid phone number, password, or user type.</p>';
-                }
-            } catch (PDOException $e) {
-                echo '<p class="text-red-600 text-center mb-4 slide-up">Error: ' . $e->getMessage() . '</p>';
-            }
-
-            $pdo = null;
-        }
-        ?>
-
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="space-y-4">
+        <form action="" method="post" class="space-y-4">
             <div class="slide-up">
                 <label for="phone_number" class="block text-blue-600">Phone Number:</label>
                 <input type="text" id="phone_number" name="phone_number" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -135,8 +128,10 @@
             <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300 slide-up">Login</button>
         </form>
 
-        <p class="mt-4 text-center text-blue-600 slide-up">Don't have an account? <a href="reg.php" class="underline hover:text-blue-700">Register here</a></p>
+        <p class="mt-4 text-center text-blue-600 slide-up">
+            Don't have an account?
+            <a href="reg.php" class="underline hover:text-blue-700">Register here</a>
+        </p>
     </div>
 </body>
 </html>
-
