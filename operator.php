@@ -9,9 +9,12 @@ $user = "postgres";
 $password = "5112";
 
 try {
-    // Create PDO connection
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-    $pdo = new PDO($dsn, $user, $password);
+    $pdo = new PDO(
+    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+    "ev_8jta_user",
+    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+);
+
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Retrieve operator data based on contact
@@ -103,9 +106,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = "postgres";
         $password = "5112";
 
-        // Create PDO connection
-        $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-        $pdo = new PDO($dsn, $user, $password);
+        $pdo = new PDO(
+    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+    "ev_8jta_user",
+    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+);
+
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $id = $_POST["id"];
@@ -128,3 +134,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
