@@ -9,7 +9,7 @@ $password = "5112";
 
 try {
     // Create PDO connection
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password";
+    $dsn = "postgresql://ev_8jta_user:JMxhcUXabU16VLJjiyew6oxGgxJm4Boq@dpg-d4mmlbq4d50c73eq0gs0-a/ev_8jta";
     $pdo = new PDO($dsn);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -92,4 +92,5 @@ try {
         </table>
     </main>
 </body>
+
 </html>
