@@ -6,8 +6,12 @@ $dbname = "ev";
 $user = "postgres";
 $password = '5112';
 try {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password";
-    $pdo = new PDO($dsn);
+   $pdo = new PDO(
+    "pgsql:host=dpg-d4mmlbq4d50c73eq0gs0-a.oregon-postgres.render.com;port=5432;dbname=ev_8jta",
+    "ev_8jta_user",
+    "JMxhcUXabU16VLJjiyew6oxGgxJm4Boq"
+);
+
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());
@@ -122,4 +126,5 @@ if(isset($_GET['station_id'])) {
         <input type="submit" value="Submit Feedback">
     </form>
 </body>
+
 </html>
